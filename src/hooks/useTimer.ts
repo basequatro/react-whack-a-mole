@@ -23,10 +23,29 @@ export default function useTimer() {
     return Math.floor(Math.random() * GLOBAL_TIME);
   };
 
-  const calculatePoints = () => {
-    setPoint((prevState) => prevState + 1);
-  };
+  const calculatePoints = (value: IMole, i: number) => {
+    let molesOnScreen: number = 0;
 
+    gameMap[i].isUp = 0;
+    gameMap[i].isBomb = false;
+
+    gameMap.forEach((v) => {
+      if (v.isUp) {
+        molesOnScreen += 1;
+      }
+    });
+
+    if (molesOnScreen >= 4) {
+      setPoint((prevState) => prevState + 256);
+    } else if (molesOnScreen === 3) {
+      setPoint((prevState) => prevState + 16);
+    } else if (molesOnScreen === 2) {
+      setPoint((prevState) => prevState + 16);
+    } else {
+      setPoint((prevState) => prevState + 1);
+    }
+  };
+  
   const getDeployTime = (time: number) => {
     const countDown: number = GLOBAL_TIME - time;
     if (countDown > 50) {
