@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { GLOBAL_TIME, NUMBER_OF_HOLES } from "../config/constants";
+import {
+    BOMB_DURATION,
+  GLOBAL_TIME,
+  NUMBER_OF_BOMBS,
+  NUMBER_OF_HOLES,
+} from "../config/constants";
 import { IMole, ITime } from "../types/definitions";
 
 export default function useTimer() {
@@ -45,7 +50,7 @@ export default function useTimer() {
       setPoint((prevState) => prevState + 1);
     }
   };
-  
+
   const getDeployTime = (time: number) => {
     const countDown: number = GLOBAL_TIME - time;
     if (countDown > 50) {
@@ -78,6 +83,7 @@ export default function useTimer() {
     setGameMap((prevState) => {
       const random = selectMole(prevState);
 
+      //run each second
       if (count === 0 || count % 1 === 0) {
         prevState.forEach((v, i) => {
           if (v.isUp) {
@@ -90,10 +96,20 @@ export default function useTimer() {
             prevState[i].isBomb = false;
           }
         });
+
+        if (bombMap.includes(count)) {
+          prevState[random].isBomb = true;
+        }
+
+        if (prevState[random].isBomb) {
+          prevState[random].isUp = BOMB_DURATION;
+        } else {
+          prevState[random].isUp = duration;
+        }
       }
       return prevState;
     });
-  }, [count, duration]);
+  }, [bombMap, count, duration, selectMole]);
 
   const startTimer = useCallback(() => {
     time.current = setTimeout(() => {
@@ -104,11 +120,15 @@ export default function useTimer() {
 
   const resetTimer = useCallback(() => {
     if (count) {
-      setCount(0);
+      clearInterval(time.current);
       reference.current = 0;
+      setCount(0);
       setStartedGame(false);
+      setPoint(0);
+      setGameMap(initialGameMap);
+      // window.location.reload()
     }
-  }, [count]);
+  }, [count, initialGameMap]);
 
   useEffect(() => {
     if (startedGame && count < GLOBAL_TIME) {
@@ -119,6 +139,23 @@ export default function useTimer() {
     return () => clearInterval(time.current);
   }, [count, resetTimer, startTimer, startedGame]);
 
+  const generateBombMap = () => {
+    let array: number[] = [];
+    let random: number;
+
+    for (let i = 0; i < NUMBER_OF_BOMBS; i++) {
+      do {
+        random = generateRandomNumber();
+      } while (array.includes(random));
+      array[i] = random;
+    }
+    setBombMap(array);
+  };
+
+  useEffect(() => {
+    generateBombMap();
+  }, []);
+
   return {
     count,
     startedGame,
@@ -126,6 +163,6 @@ export default function useTimer() {
     calculatePoints,
     points,
     gameMap,
-    resetTimer
+    resetTimer,
   };
 }
