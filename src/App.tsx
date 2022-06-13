@@ -2,7 +2,7 @@ import './App.css';
 import useTimer from './hooks/useTimer';
 
 function App() {
-  const { count, reference, startTimer } = useTimer();
+  const { count, reference, setStartedGame, startedGame } = useTimer();
   return (
     <>
       <div className="header">
@@ -12,10 +12,12 @@ function App() {
           <input
             type="button"
             className="start-button"
-            value={"START GAME"}
-            onClick={() => startTimer()}
+            value={startedGame ? "END GAME" : "START GAME"}
+            onClick={() => setStartedGame(startedGame ? false : true)}
+
           />
-          <div>Timer: {Math.ceil(count)}</div>
+          <div>Timer: {Math.floor(count)}</div>
+          <div>Ref: {reference.current}</div>
         </div>
       </div>
 

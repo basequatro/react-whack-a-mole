@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { start } from "repl";
+import { GLOBAL_TIME } from "../config/constants";
 import { ITime } from "../types/definitions";
 
 export default function useTimer() {
@@ -7,11 +7,13 @@ export default function useTimer() {
   const reference = useRef<number>(0);
   const time: ITime = useRef();
 
+  const [startedGame, setStartedGame] = useState<boolean>(false);
+
   const calculateSeconds = useCallback(() => {
     setCount((prevState) => prevState + 0.5);
 
     if (reference.current % 1 === 0) {
-        console.log('1sec')
+      console.log("1sec");
     }
   }, []);
 
@@ -22,9 +24,22 @@ export default function useTimer() {
     }, 500);
   }, [calculateSeconds]);
 
-  useEffect(() => {
-    startTimer();
-  }, [count, startTimer]);
+  const resetTimer = useCallback(() => {
+    if (count) {
+      setCount(0);
+      reference.current = 0
+      setStartedGame(false);
+    }
+  }, [count]);
 
-  return { count, reference, startTimer };
+  useEffect(() => {
+    if (startedGame && count < GLOBAL_TIME) {
+      startTimer();
+    } else {
+      resetTimer();
+    }
+    return () => clearInterval(time.current);
+  }, [count, resetTimer, startTimer, startedGame]);
+
+  return { count, reference, startedGame, setStartedGame };
 }

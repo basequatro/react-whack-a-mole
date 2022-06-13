@@ -1,0 +1,1 @@
+export const GLOBAL_TIME: number = 60;
