@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { GLOBAL_TIME } from "../config/constants";
-import { ITime } from "../types/definitions";
+import { GLOBAL_TIME, NUMBER_OF_HOLES } from "../config/constants";
+import { IMole, ITime } from "../types/definitions";
 
 export default function useTimer() {
   const reference = useRef<number>(0);
@@ -8,9 +8,17 @@ export default function useTimer() {
   const [count, setCount] = useState<number>(0);
   const [startedGame, setStartedGame] = useState<boolean>(false);
   const [points, setPoint] = useState<number>(0);
-  const [gameMap, setGameMap] = useState<any[]>([]);
   const [duration, setDuration] = useState<number>(5);
   const [bombMap, setBombMap] = useState<number[]>([]);
+  const initialGameMap: IMole[] = Array.from(
+    { length: NUMBER_OF_HOLES },
+    () => ({
+      isUp: 0,
+      isBomb: false,
+    })
+  );
+  const [gameMap, setGameMap] = useState<any[]>(initialGameMap);
+
 
   const generateRandomNumber = () => {
     return Math.floor(Math.random() * GLOBAL_TIME);
@@ -36,10 +44,22 @@ export default function useTimer() {
       setDuration(0.5);
     }
   };
+  
 
   const calculateSeconds = useCallback(() => {
     setCount((prevState) => prevState + 0.5);
     getDeployTime(count);
+
+    setGameMap(prevState => {
+        const random = generateRandomNumber()
+        prevState[random].isUp = duration
+        prevState.forEach(v => {
+            if(v.isUp) {
+                prevState[random].isUp -= 1
+            }
+        })
+        return prevState;
+    })
     
     if (reference.current % 1 === 0) {
       console.log("1sec", duration);

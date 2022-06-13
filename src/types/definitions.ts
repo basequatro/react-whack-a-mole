@@ -9,3 +9,8 @@ export interface ITimer {
 export interface IPoints {
   totalPoints: number;
 }
+export interface IMole {
+    isUp: number;
+    isBomb: boolean;
+    onClick?: any;
+  }
