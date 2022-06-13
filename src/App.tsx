@@ -2,7 +2,13 @@ import './App.css';
 import useTimer from './hooks/useTimer';
 
 function App() {
-  const { count, reference, setStartedGame, startedGame } = useTimer();
+  const { count, setStartedGame, startedGame, calculatePoints, points } = useTimer();
+
+  const handleKill = () => {
+    // check if is bomb
+    calculatePoints()
+  }
+
   return (
     <>
       <div className="header">
@@ -17,12 +23,12 @@ function App() {
 
           />
           <div>Timer: {Math.floor(count)}</div>
-          <div>Ref: {reference.current}</div>
+          <div>Points: {points}</div>
         </div>
       </div>
 
       <div className="game-board">
-        <div>x</div>
+        <div onClick={() => handleKill()}>x</div>
         <div>x</div>
         <div>x</div>
         <div>x</div>

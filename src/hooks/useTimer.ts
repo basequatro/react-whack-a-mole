@@ -3,11 +3,15 @@ import { GLOBAL_TIME } from "../config/constants";
 import { ITime } from "../types/definitions";
 
 export default function useTimer() {
-  const [count, setCount] = useState<number>(0);
   const reference = useRef<number>(0);
   const time: ITime = useRef();
-
+  const [count, setCount] = useState<number>(0);
   const [startedGame, setStartedGame] = useState<boolean>(false);
+  const [points, setPoint] = useState<number>(0);
+
+  const calculatePoints = () => {
+      setPoint(prevState => prevState + 1)
+  }
 
   const calculateSeconds = useCallback(() => {
     setCount((prevState) => prevState + 0.5);
@@ -27,7 +31,7 @@ export default function useTimer() {
   const resetTimer = useCallback(() => {
     if (count) {
       setCount(0);
-      reference.current = 0
+      reference.current = 0;
       setStartedGame(false);
     }
   }, [count]);
@@ -41,5 +45,5 @@ export default function useTimer() {
     return () => clearInterval(time.current);
   }, [count, resetTimer, startTimer, startedGame]);
 
-  return { count, reference, startedGame, setStartedGame };
+  return { count, startedGame, setStartedGame, calculatePoints, points };
 }
