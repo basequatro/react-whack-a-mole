@@ -19,14 +19,13 @@ export default function useTimer() {
   );
   const [gameMap, setGameMap] = useState<any[]>(initialGameMap);
 
-
   const generateRandomNumber = () => {
     return Math.floor(Math.random() * GLOBAL_TIME);
   };
 
   const calculatePoints = () => {
-      setPoint(prevState => prevState + 1)
-  }
+    setPoint((prevState) => prevState + 1);
+  };
 
   const getDeployTime = (time: number) => {
     const countDown: number = GLOBAL_TIME - time;
@@ -44,27 +43,37 @@ export default function useTimer() {
       setDuration(0.5);
     }
   };
-  
+
+  const selectMole: any = useCallback((prevState?: IMole[]) => {
+    let random: number = Math.floor(Math.random() * NUMBER_OF_HOLES);
+    if (prevState && prevState[random].isUp) {
+      return selectMole(prevState);
+    }
+    return random;
+  }, []);
 
   const calculateSeconds = useCallback(() => {
     setCount((prevState) => prevState + 0.5);
     getDeployTime(count);
 
-    setGameMap(prevState => {
-        const random = generateRandomNumber()
-        prevState[random].isUp = duration
-        prevState.forEach(v => {
-            if(v.isUp) {
-                prevState[random].isUp -= 1
+    setGameMap((prevState) => {
+      const random = selectMole(prevState);
+
+      if (count === 0 || count % 1 === 0) {
+        prevState.forEach((v, i) => {
+          if (v.isUp) {
+            if (duration >= 1) {
+              prevState[i].isUp -= 1;
+            } else {
+              prevState[i].isUp -= 0.5;
             }
-        })
-        return prevState;
-    })
-    
-    if (reference.current % 1 === 0) {
-      console.log("1sec", duration);
-      
-    }
+          } else {
+            prevState[i].isBomb = false;
+          }
+        });
+      }
+      return prevState;
+    });
   }, [count, duration]);
 
   const startTimer = useCallback(() => {
@@ -91,5 +100,13 @@ export default function useTimer() {
     return () => clearInterval(time.current);
   }, [count, resetTimer, startTimer, startedGame]);
 
-  return { count, startedGame, setStartedGame, calculatePoints, points, gameMap };
+  return {
+    count,
+    startedGame,
+    setStartedGame,
+    calculatePoints,
+    points,
+    gameMap,
+    resetTimer
+  };
 }

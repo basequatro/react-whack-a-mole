@@ -3,6 +3,7 @@ import Hole from "./components/Hole";
 import Points from "./components/Points";
 import Timer from "./components/Timer";
 import useTimer from "./hooks/useTimer";
+import { IMole } from "./types/definitions";
 
 function App() {
   const {
@@ -12,11 +13,16 @@ function App() {
     calculatePoints,
     points,
     gameMap,
+    resetTimer
   } = useTimer();
 
-  const handleKill = () => {
-    // check if is bomb
-    calculatePoints();
+  const handleKill = (v: IMole, i: number) => {
+    if (v.isBomb) {
+      alert(`You clicked in a bomb. End of the game with ${points} points!`);
+      resetTimer();
+    } else {
+      calculatePoints(v, i);
+    }
   };
 
   return (
@@ -38,15 +44,17 @@ function App() {
       </div>
 
       <div className="game-board">
-        {gameMap.map((v: any) => {
-          return (
-            <Hole
-              isUp={v.isUp}
-              isBomb={v.isBomb}
-              onClick={() => handleKill()}
-            />
-          );
-        })}
+        {gameMap &&
+          gameMap.map((val: IMole, i: number) => {
+            return (
+              <Hole
+                key={i}
+                isUp={val.isUp}
+                isBomb={val.isBomb}
+                onClick={() => handleKill(val, i)}
+              />
+            );
+          })}
       </div>
     </>
   );
