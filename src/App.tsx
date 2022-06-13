@@ -1,8 +1,8 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import useTimer from './hooks/useTimer';
 
 function App() {
+  const { count, reference, startTimer } = useTimer();
   return (
     <>
       <div className="header">
@@ -13,13 +13,29 @@ function App() {
             type="button"
             className="start-button"
             value={"START GAME"}
+            onClick={() => startTimer()}
           />
-
+          <div>Timer: {Math.ceil(count)}</div>
         </div>
       </div>
 
       <div className="game-board">
-        xxx
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
+        <div>x</div>
       </div>
     </>
   );
