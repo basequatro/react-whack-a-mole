@@ -8,6 +8,8 @@ export default function useTimer() {
   const [count, setCount] = useState<number>(0);
   const [startedGame, setStartedGame] = useState<boolean>(false);
   const [points, setPoint] = useState<number>(0);
+  const [gameMap, setGameMap] = useState<any[]>([]);
+
 
   const calculatePoints = () => {
       setPoint(prevState => prevState + 1)
@@ -45,5 +47,5 @@ export default function useTimer() {
     return () => clearInterval(time.current);
   }, [count, resetTimer, startTimer, startedGame]);
 
-  return { count, startedGame, setStartedGame, calculatePoints, points };
+  return { count, startedGame, setStartedGame, calculatePoints, points, gameMap };
 }

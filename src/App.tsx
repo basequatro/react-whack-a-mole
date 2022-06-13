@@ -1,13 +1,23 @@
-import './App.css';
-import useTimer from './hooks/useTimer';
+import "./App.css";
+import Hole from "./components/Hole";
+import Points from "./components/Points";
+import Timer from "./components/Timer";
+import useTimer from "./hooks/useTimer";
 
 function App() {
-  const { count, setStartedGame, startedGame, calculatePoints, points } = useTimer();
+  const {
+    count,
+    setStartedGame,
+    startedGame,
+    calculatePoints,
+    points,
+    gameMap,
+  } = useTimer();
 
   const handleKill = () => {
     // check if is bomb
-    calculatePoints()
-  }
+    calculatePoints();
+  };
 
   return (
     <>
@@ -20,30 +30,23 @@ function App() {
             className="start-button"
             value={startedGame ? "END GAME" : "START GAME"}
             onClick={() => setStartedGame(startedGame ? false : true)}
-
+            data-testid="startend"
           />
-          <div>Timer: {Math.floor(count)}</div>
-          <div>Points: {points}</div>
+          <Timer count={count} />
+          <Points totalPoints={points} />
         </div>
       </div>
 
       <div className="game-board">
-        <div onClick={() => handleKill()}>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
-        <div>x</div>
+        {gameMap.map((v: any) => {
+          return (
+            <Hole
+              isUp={v.isUp}
+              isBomb={v.isBomb}
+              onClick={() => handleKill()}
+            />
+          );
+        })}
       </div>
     </>
   );
