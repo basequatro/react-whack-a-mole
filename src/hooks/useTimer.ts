@@ -105,11 +105,12 @@ export default function useTimer() {
           prevState[random].isUp = BOMB_DURATION;
         } else {
           prevState[random].isUp = duration;
+          console.log('deploy mole' + count + ' ' + random, prevState[random])
         }
       }
       return prevState;
     });
-  }, [bombMap, count, duration, selectMole]);
+  }, [bombMap, setCount, count, duration, selectMole]);
 
   const startTimer = useCallback(() => {
     time.current = setTimeout(() => {
@@ -126,7 +127,7 @@ export default function useTimer() {
       setStartedGame(false);
       setPoint(0);
       setGameMap(initialGameMap);
-      // window.location.reload()
+      window.location.reload()
     }
   }, [count, initialGameMap]);
 
