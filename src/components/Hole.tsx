@@ -20,7 +20,6 @@ const variants = {
     },
 };
 
-
 const Hole = ({ isUp, isBomb, onClick }: IMole) => {
     const controls = useAnimation();
 

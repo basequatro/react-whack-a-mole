@@ -1,11 +1,12 @@
-import "./App.css";
+import { FC } from "react";
 import Hole from "./components/Hole";
 import Points from "./components/Points";
 import Timer from "./components/Timer";
 import useTimer from "./hooks/useTimer";
 import { IMole } from "./types/definitions";
+import "./App.css";
 
-function App() {
+const App: FC = () => {
   const {
     count,
     setStartedGame,

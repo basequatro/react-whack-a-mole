@@ -1,0 +1,21 @@
+{
+    "verbose": true,
+    "setupFiles": ["<rootDir>/src/setupTests.ts"],
+    "testRegex": "/*.test.tsx$",
+    "collectCoverage": true,
+    "coverageReporters": ["lcov"],
+    "coverageDirectory": "test-coverage",
+    "testPathIgnorePatterns": ["<rootDir>/src/index.tsx"],
+    "coveragePathIgnorePatterns": ["./src/index.tsx"],
+    "collectCoverageFrom": ["<rootDir>/src/**/*.{js,jsx,ts,tsx}"],
+    "coverageThreshold": {
+      "global": {
+        "branches": 50,
+        "functions": 50,
+        "lines": 50,
+        "statements": 50
+      }
+    },
+    "moduleDirectories": ["node_modules", "src"],
+    "moduleFileExtensions": ["js", "jsx", "ts", "tsx"]
+  }  
