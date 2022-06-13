@@ -9,19 +9,43 @@ export default function useTimer() {
   const [startedGame, setStartedGame] = useState<boolean>(false);
   const [points, setPoint] = useState<number>(0);
   const [gameMap, setGameMap] = useState<any[]>([]);
+  const [duration, setDuration] = useState<number>(5);
+  const [bombMap, setBombMap] = useState<number[]>([]);
 
+  const generateRandomNumber = () => {
+    return Math.floor(Math.random() * GLOBAL_TIME);
+  };
 
   const calculatePoints = () => {
       setPoint(prevState => prevState + 1)
   }
 
+  const getDeployTime = (time: number) => {
+    const countDown: number = GLOBAL_TIME - time;
+    if (countDown > 50) {
+      setDuration(5);
+    } else if (countDown > 40) {
+      setDuration(4);
+    } else if (countDown > 30) {
+      setDuration(3);
+    } else if (countDown > 20) {
+      setDuration(2);
+    } else if (countDown > 10) {
+      setDuration(1);
+    } else {
+      setDuration(0.5);
+    }
+  };
+
   const calculateSeconds = useCallback(() => {
     setCount((prevState) => prevState + 0.5);
-
+    getDeployTime(count);
+    
     if (reference.current % 1 === 0) {
-      console.log("1sec");
+      console.log("1sec", duration);
+      
     }
-  }, []);
+  }, [count, duration]);
 
   const startTimer = useCallback(() => {
     time.current = setTimeout(() => {
